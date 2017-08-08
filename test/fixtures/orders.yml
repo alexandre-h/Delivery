@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  customer_id: one
+  restaurant_id: one
+  rider_id: one
+  status: MyString
+
+two:
+  customer_id: two
+  restaurant_id: two
+  rider_id: two
+  status: MyString
