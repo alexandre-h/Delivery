@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170807164148) do
+ActiveRecord::Schema.define(version: 20170809142328) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,8 +27,9 @@ ActiveRecord::Schema.define(version: 20170807164148) do
     t.integer  "restaurant_id"
     t.integer  "rider_id"
     t.string   "status"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.decimal  "distance",      precision: 5
     t.index ["customer_id"], name: "index_orders_on_customer_id", using: :btree
     t.index ["restaurant_id"], name: "index_orders_on_restaurant_id", using: :btree
     t.index ["rider_id"], name: "index_orders_on_rider_id", using: :btree
