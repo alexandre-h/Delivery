@@ -6,19 +6,20 @@ class Order < ApplicationRecord
   belongs_to :restaurant
   belongs_to :rider
 
+  scope :in_progress, -> (customer_id) {where("status IS 'in_progress' AND customer_id IS ?", customer_id)}
+  scope :is_cancelled, -> (customer_id) {where("status IS 'is_cancelled' AND customer_id IS ?", customer_id)}
+
   after_create :define_order_rider
 
   def define_order_rider
     customer = Customer.find_by(id: self.customer.id)
     restaurant = Restaurant.find_by(id: self.restaurant.id)
-    customer_from_restaurant = calcul_distance([customer.x, customer.y], [restaurant.x, restaurant.y]) unless  customer.nil? || restaurant.nil?
+    customer_from_restaurant = calcul_distance([customer.x, customer.y], [restaurant.x, restaurant.y])  unless  customer.nil? || restaurant.nil?
     riders = Rider.all.to_a
     riders.each_with_index do |rider, index|
-      rider_one_from_restaurant = calcul_distance([rider.x, rider.y], [restaurant.x, restaurant.y]) if rider_one_from_restaurant.nil? && !customer.nil? || !restaurant.nil?
+      rider_one_from_restaurant = calcul_distance([rider.x, rider.y], [restaurant.x, restaurant.y]) if rider_one_from_restaurant.nil?
       unless rider_one_from_restaurant.nil?
         if riders[index + 1]
-          # choose the actual saved rider to compare if have one,
-          # if we want more riders
           rider_tmp = self.rider ? self.rider : riders[index + 1]
           rider_two_from_restaurant = calcul_distance([rider_tmp.x, rider_tmp.y], [restaurant.x, restaurant.y])
           final_distance_rider_one = define_distance(customer_from_restaurant, rider_one_from_restaurant, rider: rider, restaurant: restaurant)
@@ -34,14 +35,12 @@ class Order < ApplicationRecord
   end
 
   def define_distance(customer_from_restaurant, rider_from_restaurant, opts = {})
-    final_distance = customer_from_restaurant + rider_from_restaurant
-    final_distance
+    customer_from_restaurant + rider_from_restaurant
   end
 
   def define_time(rider, restaurant, distance)
-    total_time = (distance / rider.speed) + restaurant.cooking_time
+    (distance / rider.speed) + restaurant.cooking_time
   end
-
 
   private
 
