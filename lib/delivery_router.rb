@@ -8,20 +8,20 @@ class DeliveryRouter
     @riders.each { |rider| rider.save }
   end
 
-  #add_order(:customer => 1, :restaurant => 3)
   def add_order(order)
     customer = Customer.find_by(id: order[:customer])
     restaurant = Restaurant.find_by(id: order[:restaurant])
-    added_order = Order.create(customer: customer, restaurant: restaurant)
+    Order.create(customer: customer, restaurant: restaurant, status: 'in_progress')
   end
 
   def clear_orders(customer)
-    Order.where(customer_id: customer[:customer]).delete_all
+    orders = Order.where(customer_id: customer[:customer], status: 'in_progress')
+    orders.each { |order| order.update(status: 'is_cancelled')}
   end
 
   def route(rider)
-    order = Order.where(rider_id: rider[:rider]).last
-     order.nil? ? [] : [order.restaurant, order.customer]
+    order = Order.where(rider_id: rider[:rider], status: 'in_progress').last
+    order.nil? ? [] : [order.restaurant, order.customer]
   end
 
   def delivery_time(customer)
