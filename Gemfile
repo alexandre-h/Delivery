@@ -40,3 +40,4 @@ gem 'spring',        group: :development
 
 gem 'rspec', '~> 3.0'
 gem 'database_cleaner'
+gem 'shoulda-matchers', '~> 3.1'
