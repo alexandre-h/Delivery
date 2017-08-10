@@ -6,11 +6,14 @@ class Order < ApplicationRecord
   belongs_to :restaurant
   belongs_to :rider
 
+  # get all order in progress for one customer
   scope :in_progress, -> (customer_id) {where("status IS 'in_progress' AND customer_id IS ?", customer_id)}
+  # get all cancelled order for one customer
   scope :is_cancelled, -> (customer_id) {where("status IS 'is_cancelled' AND customer_id IS ?", customer_id)}
 
   after_create :define_order_rider
 
+  # set a rider when a new order is created
   def define_order_rider
     customer = Customer.find_by(id: self.customer.id)
     restaurant = Restaurant.find_by(id: self.restaurant.id)
@@ -34,16 +37,19 @@ class Order < ApplicationRecord
     end
   end
 
+  # define the distance the rider have to do
   def define_distance(customer_from_restaurant, rider_from_restaurant, opts = {})
     customer_from_restaurant + rider_from_restaurant
   end
 
+  # define the time to delivred the order
   def define_time(rider, restaurant, distance)
     (distance / rider.speed) + restaurant.cooking_time
   end
 
   private
 
+  # euclidian calcul
   def calcul_distance(p1, p2)
     sum_of_squares = 0
     p1.each_with_index do |p1_coord,index|
