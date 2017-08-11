@@ -5,7 +5,7 @@ Database: postgres
 
 # Run the rspec
 Clone the project,
+run Bundle install,
 run rake db:create,
 run rake db:migrate,
-run Bundle install,
 run rspec
