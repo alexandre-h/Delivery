@@ -10,6 +10,7 @@ class DeliveryRouter
 
   # create an order for a customer
   def add_order(order)
+    p 'test'
     customer = Customer.find_by(id: order[:customer])
     restaurant = Restaurant.find_by(id: order[:restaurant])
     Order.create(customer: customer, restaurant: restaurant, status: 'in_progress')
